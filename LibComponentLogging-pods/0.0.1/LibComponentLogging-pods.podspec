@@ -68,19 +68,7 @@ class LibComponentLoggingPodsConfig
     add_include(@lcl_pods_config_logger_file, header_file_name)
 
     # instantiate given configuration template file
-    if config_template_file_name != "" then
-      config_template_path = File.dirname(config_template_file_name)
-      config_template_name = File.basename(config_template_file_name)
-      config_name = config_template_name.gsub(/\.template/, '')
-      config_file = @lcl_user_root + config_name
-      if File.file? config_file then
-        copy_file(@pods_config.project_pods_root + config_template_path + config_template_name, @lcl_user_root + (config_name + @lcl_tmp_file_suffix))
-        note "Configuration file '" + config_name + "' already exists, please merge with '" + config_name + @lcl_tmp_file_suffix + "' manually"
-      else
-        copy_file(@pods_config.project_pods_root + config_template_path + config_template_name, config_file)
-        note "Configuration file '" + config_name + "' needs to be adapted before compiling your project"
-      end
-    end
+    instantiate_config_template(config_template_file_name)
 
     # adapt includes
     modify_file_names.each do|file_name|
@@ -91,13 +79,21 @@ class LibComponentLoggingPodsConfig
   end
 
   # Adds the given extension to the lcl_config_extension.h configuration file.
-  def configure_extension(name, header_file_name)
+  def configure_extension(name, header_file_name, config_template_file_name = "", modify_file_names = [])
     prepare_configure()
 
     info "Configuring LibComponentLogging extension '" + name + "'"
 
     # add given header file to extensions configuration file
     add_include(@lcl_pods_config_extensions_file, header_file_name)
+
+    # instantiate given configuration template file
+    instantiate_config_template(config_template_file_name)
+
+    # adapt includes
+    modify_file_names.each do|file_name|
+      add_suffix_to_includes(@pods_config.project_pods_root + file_name, @lcl_pods_config_suffix)
+    end
   end
 
   protected
@@ -182,6 +178,23 @@ class LibComponentLoggingPodsConfig
     debug "Adding include '" + include + "' to file '" + file + "'"
     file.open('a') do |f|
       f.puts("#include \"" + include + "\"\n")
+    end
+  end
+
+  protected
+  def instantiate_config_template(config_template_file_name)
+    return if config_template_file_name == ""
+
+    config_template_path = File.dirname(config_template_file_name)
+    config_template_name = File.basename(config_template_file_name)
+    config_name = config_template_name.gsub(/\.template/, '')
+    config_file = @lcl_user_root + config_name
+    if File.file? config_file then
+      copy_file(@pods_config.project_pods_root + config_template_path + config_template_name, @lcl_user_root + (config_name + @lcl_tmp_file_suffix))
+      note "Configuration file '" + config_name + "' already exists, please merge with '" + config_name + @lcl_tmp_file_suffix + "' manually"
+    else
+      copy_file(@pods_config.project_pods_root + config_template_path + config_template_name, config_file)
+      note "Configuration file '" + config_name + "' needs to be adapted before compiling your project"
     end
   end
 
