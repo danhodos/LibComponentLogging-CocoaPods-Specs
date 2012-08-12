@@ -54,12 +54,10 @@ class LibComponentLoggingPodsConfig
     @lcl_user_config_extensions_file = @lcl_user_root + @lcl_user_config_extensions_file_name
   end
 
-  # Creates the default configuration.
   def configure
     prepare_configure()
   end
 
-  # Adds the given logging back-end to the lcl_config_logger.h configuration file.
   def configure_logger(name, header_file_name, config_template_file_name = "", modify_file_names = [])
     prepare_configure()
 
@@ -86,7 +84,6 @@ class LibComponentLoggingPodsConfig
     @last_configured_logger_name = name
   end
 
-  # Adds the given extension to the lcl_config_extension.h configuration file.
   def configure_extension(name, header_file_name, config_template_file_name = "", modify_file_names = [])
     prepare_configure()
 
