@@ -5,6 +5,7 @@ class LibComponentLoggingPodsConfig
     # CocoaPods configuration data
     @pods_config = pods_config
     @pods_headers_name = "Headers"
+    @pods_buildheaders_name = "BuildHeaders"
     @pods_root_name = File.basename(@pods_config.project_pods_root)
 
     # status
@@ -15,6 +16,7 @@ class LibComponentLoggingPodsConfig
     @lcl_core_root = @pods_config.project_pods_root + 'LibComponentLogging-Core'
     @lcl_pods_root = @pods_config.project_pods_root + "LibComponentLogging-pods"
     @lcl_pods_headers_root = @pods_config.project_pods_root + (@pods_headers_name + "/LibComponentLogging-pods")
+    @lcl_pods_buildheaders_root = @pods_config.project_pods_root + (@pods_buildheaders_name + "/LibComponentLogging-pods")
     @lcl_user_root = @pods_config.project_pods_root + ".."
 
     # suffixes
@@ -41,6 +43,10 @@ class LibComponentLoggingPodsConfig
     @lcl_pods_headers_config_logger_file = @lcl_pods_headers_root + @lcl_pods_config_logger_file_name
     @lcl_pods_headers_config_extensions_file = @lcl_pods_headers_root + @lcl_pods_config_extensions_file_name
 
+    @lcl_pods_buildheaders_config_components_file = @lcl_pods_buildheaders_root + @lcl_pods_config_components_file_name
+    @lcl_pods_buildheaders_config_logger_file = @lcl_pods_buildheaders_root + @lcl_pods_config_logger_file_name
+    @lcl_pods_buildheaders_config_extensions_file = @lcl_pods_buildheaders_root + @lcl_pods_config_extensions_file_name
+
     # user configuration files
     @lcl_user_config_components_file_name = "lcl_config_components.h" + @lcl_user_config_suffix
     @lcl_user_config_components_file = @lcl_user_root + @lcl_user_config_components_file_name
@@ -62,7 +68,9 @@ class LibComponentLoggingPodsConfig
     note "'" + name + "' overrides the previously configured logging back-end '" + @last_configured_logger_name + "'" if @last_configured_logger_name != ""
 
     # create new logger configuration file
-    create_file_and_link(@lcl_pods_config_logger_file, @lcl_pods_headers_config_logger_file)
+    create_file(@lcl_pods_config_logger_file)
+    link_file(@lcl_pods_config_logger_file, @lcl_pods_headers_config_logger_file)
+    link_file(@lcl_pods_config_logger_file, @lcl_pods_buildheaders_config_logger_file)
 
     # add given header file to logger configuration file
     add_include(@lcl_pods_config_logger_file, header_file_name)
@@ -105,15 +113,22 @@ class LibComponentLoggingPodsConfig
     # create folders
     create_folder(@lcl_pods_root)
     create_folder(@lcl_pods_headers_root)
+    create_folder(@lcl_pods_buildheaders_root)
 
     # rewrite includes in lcl.* core files to include *.podsconfig files instead of plain lcl config files
     add_suffix_to_includes(@lcl_core_header_file, @lcl_pods_config_suffix)
     add_suffix_to_includes(@lcl_core_implementation_file, @lcl_pods_config_suffix)
 
     # create pods configuration files
-    create_file_and_link(@lcl_pods_config_components_file, @lcl_pods_headers_config_components_file)
-    create_file_and_link(@lcl_pods_config_logger_file, @lcl_pods_headers_config_logger_file)
-    create_file_and_link(@lcl_pods_config_extensions_file, @lcl_pods_headers_config_extensions_file)
+    create_file(@lcl_pods_config_components_file)
+    link_file(@lcl_pods_config_components_file, @lcl_pods_headers_config_components_file)
+    link_file(@lcl_pods_config_components_file, @lcl_pods_buildheaders_config_components_file)
+    create_file(@lcl_pods_config_logger_file)
+    link_file(@lcl_pods_config_logger_file, @lcl_pods_headers_config_logger_file)
+    link_file(@lcl_pods_config_logger_file, @lcl_pods_buildheaders_config_logger_file)
+    create_file(@lcl_pods_config_extensions_file)
+    link_file(@lcl_pods_config_extensions_file, @lcl_pods_headers_config_extensions_file)
+    link_file(@lcl_pods_config_extensions_file, @lcl_pods_buildheaders_config_extensions_file)
 
     # create user configuration files
     touch_file(@lcl_user_config_components_file)
@@ -142,6 +157,13 @@ class LibComponentLoggingPodsConfig
   end
 
   protected
+  def create_file(file)
+    debug "Creating file '" + file + "'"
+    FileUtils.rm(file) if File.file? file
+    FileUtils.touch(file)
+  end
+
+  protected
   def touch_file(file)
     debug "Touching file '" + file + "'"
     FileUtils.touch(file)
@@ -154,13 +176,10 @@ class LibComponentLoggingPodsConfig
   end
 
   protected
-  def create_file_and_link(file, link_file)
-    debug "Creating file '" + file + "'"
-    debug "Creating link '" + link_file + "'"
-    FileUtils.rm(file) if File.file? file
-    FileUtils.rm(link_file) if File.file? link_file
-    FileUtils.touch(file)
-    FileUtils.ln(file, link_file)
+  def link_file(src_file, dst_file)
+    debug "Creating link '" + src_file + "' to '" + dst_file + "'"
+    FileUtils.rm(dst_file) if File.file? dst_file
+    FileUtils.ln_s(src_file, dst_file)
   end
 
   protected
@@ -239,7 +258,8 @@ Pod::Spec.new do |s|
   s.source_files = ''
 
   # add include path for user configuration files
-  s.xcconfig     = { 'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/.."' }
+  s.xcconfig     = { 'PODS_PUBLIC_HEADERS_SEARCH_PATHS' => '"${PODS_ROOT}/.."',
+                     'PODS_BUILD_HEADERS_SEARCH_PATHS'  => '"${PODS_ROOT}/.."' }
 
   # add lcl_config to CocoaPods' config
   class << config
