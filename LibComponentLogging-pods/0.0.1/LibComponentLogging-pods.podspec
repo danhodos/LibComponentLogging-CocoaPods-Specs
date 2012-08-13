@@ -131,7 +131,7 @@ class LibComponentLoggingPodsConfig
     touch_file(@lcl_user_config_components_file)
     touch_file(@lcl_user_config_extensions_file)
     note "Use '" + @lcl_user_config_components_file_name + "' to configure log components"
-    note "Use '" + @lcl_user_config_components_file_name + "' to configure additional log extensions"
+    note "Use '" + @lcl_user_config_extensions_file_name + "' to configure additional log extensions"
 
     # add user configuration files to pods configuration files
     add_include(@lcl_pods_config_components_file, @lcl_user_config_components_file_name)
