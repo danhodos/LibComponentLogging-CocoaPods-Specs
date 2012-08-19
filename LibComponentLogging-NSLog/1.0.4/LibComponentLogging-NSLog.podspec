@@ -30,8 +30,8 @@ Pod::Spec.new do |s|
     end
 
     config.lcl_config.configure_logger(
-      "NSLog",
-      "LCLNSLog.h"
+        :name   => 'NSLog',
+        :header => 'LCLNSLog.h'
       )
   end
 

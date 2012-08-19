@@ -58,8 +58,13 @@ class LibComponentLoggingPodsConfig
     prepare_configure()
   end
 
-  def configure_logger(name, header_file_name, config_template_file_name = "", modify_file_names = [])
+  def configure_logger(args)
     prepare_configure()
+
+    name = args[:name]
+    header = args[:header]
+    template = args.fetch(:template, '')
+    modify = args.fetch(:modify, [])
 
     info "Configuring LibComponentLogging logging back-end '" + name + "'"
 
@@ -71,32 +76,37 @@ class LibComponentLoggingPodsConfig
     link_file(@lcl_pods_config_logger_file, @lcl_pods_buildheaders_config_logger_file)
 
     # add given header file to logger configuration file
-    add_include(@lcl_pods_config_logger_file, header_file_name)
+    add_include(@lcl_pods_config_logger_file, header)
 
     # instantiate given configuration template file
-    instantiate_config_template(config_template_file_name)
+    instantiate_config_template(template)
 
     # adapt includes
-    modify_file_names.each do|file_name|
+    modify.each do|file_name|
       add_suffix_to_includes(@pods_config.project_pods_root + file_name, @lcl_pods_config_suffix)
     end
 
     @last_configured_logger_name = name
   end
 
-  def configure_extension(name, header_file_name, config_template_file_name = "", modify_file_names = [])
+  def configure_extension(args)
     prepare_configure()
+
+    name = args[:name]
+    header = args[:header]
+    template = args.fetch(:template, '')
+    modify = args.fetch(:modify, [])
 
     info "Configuring LibComponentLogging extension '" + name + "'"
 
     # add given header file to extensions configuration file
-    add_include(@lcl_pods_config_extensions_file, header_file_name)
+    add_include(@lcl_pods_config_extensions_file, header)
 
     # instantiate given configuration template file
-    instantiate_config_template(config_template_file_name)
+    instantiate_config_template(template)
 
     # adapt includes
-    modify_file_names.each do|file_name|
+    modify.each do|file_name|
       add_suffix_to_includes(@pods_config.project_pods_root + file_name, @lcl_pods_config_suffix)
     end
   end

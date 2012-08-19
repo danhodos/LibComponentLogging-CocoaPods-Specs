@@ -28,9 +28,9 @@ Pod::Spec.new do |s|
     end
   
     config.lcl_config.configure_extension(
-      'UserDefaults',
-      'LCLUserDefaults.h',
-      'Headers/LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.template.h'
+        :name     => 'UserDefaults',
+        :header   => 'LCLUserDefaults.h',
+        :template => 'Headers/LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.template.h'
       )
   end
 

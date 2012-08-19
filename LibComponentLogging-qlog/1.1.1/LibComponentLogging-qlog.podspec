@@ -31,7 +31,10 @@ Pod::Spec.new do |s|
       return
     end
   
-    config.lcl_config.configure_extension("qlog", "qlog.h")
+    config.lcl_config.configure_extension(
+        :name   => "qlog",
+        :header => "qlog.h"
+      )
   end
 
 end

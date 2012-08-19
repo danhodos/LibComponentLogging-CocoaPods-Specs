@@ -31,10 +31,10 @@ Pod::Spec.new do |s|
     end
 
     config.lcl_config.configure_logger(
-      'NSLogger',
-      'LCLNSLogger.h',
-      'Headers/LibComponentLogging-NSLogger/LCLNSLoggerConfig.template.h',
-      [ 'LibComponentLogging-NSLogger/LCLNSLogger.m' ]
+        :name     => 'NSLogger',
+        :header   => 'LCLNSLogger.h',
+        :template => 'Headers/LibComponentLogging-NSLogger/LCLNSLoggerConfig.template.h',
+        :modify   => [ 'LibComponentLogging-NSLogger/LCLNSLogger.m' ]
       )
   end
 
