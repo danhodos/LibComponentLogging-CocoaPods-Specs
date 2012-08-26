@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
 
   s.summary      = 'LibComponentLogging logging back-end which sends log '     \
                    'messages to the Apple System Log facility (ASL).'
-  s.description  = 'LibComponentLogging-LogFile is a logging back-end for '    \
+  s.description  = 'LibComponentLogging-SystemLog is a logging back-end for '  \
                    'LibComponentLogging which send log messages to the '       \
                    'Apple System Log facility (ASL).'
 
@@ -22,6 +22,15 @@ Pod::Spec.new do |s|
   def s.post_install(target)
     if not (config.respond_to? :lcl_config and config.lcl_config) then
       # LibComponentLogging-pods configuration is not available
+      Dir.chdir(config.project_pods_root + 'LibComponentLogging-SystemLog/') do
+        system('sed \'s/<UniquePrefix>/MyApp/g\' LCLSystemLogConfig.template.h > LCLSystemLogConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'Headers/LibComponentLogging-SystemLog/') do
+        FileUtils.ln_s('../../LibComponentLogging-SystemLog/LCLSystemLogConfig.h', 'LCLSystemLogConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'BuildHeaders/LibComponentLogging-SystemLog/') do
+        FileUtils.ln_s('../../LibComponentLogging-SystemLog/LCLSystemLogConfig.h', 'LCLSystemLogConfig.h')
+      end
       return
     end
 

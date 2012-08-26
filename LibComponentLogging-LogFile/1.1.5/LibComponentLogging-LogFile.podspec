@@ -22,6 +22,15 @@ Pod::Spec.new do |s|
   def s.post_install(target)
     if not (config.respond_to? :lcl_config and config.lcl_config) then
       # LibComponentLogging-pods configuration is not available
+      Dir.chdir(config.project_pods_root + 'LibComponentLogging-LogFile/') do
+        system('sed \'s/<UniquePrefix>/MyApp/g\' LCLLogFileConfig.template.h > LCLLogFileConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'Headers/LibComponentLogging-LogFile/') do
+        FileUtils.ln_s('../../LibComponentLogging-LogFile/LCLLogFileConfig.h', 'LCLLogFileConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'BuildHeaders/LibComponentLogging-LogFile/') do
+        FileUtils.ln_s('../../LibComponentLogging-LogFile/LCLLogFileConfig.h', 'LCLLogFileConfig.h')
+      end
       return
     end
 

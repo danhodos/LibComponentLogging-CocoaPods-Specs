@@ -22,6 +22,15 @@ Pod::Spec.new do |s|
   def s.post_install(target)
     if not (config.respond_to? :lcl_config and config.lcl_config) then
       # LibComponentLogging-pods configuration is not available
+      Dir.chdir(config.project_pods_root + 'LibComponentLogging-UserDefaults/') do
+        system('sed \'s/<UniquePrefix>/MyApp/g\' LCLUserDefaultsConfig.template.h > LCLUserDefaultsConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'Headers/LibComponentLogging-UserDefaults/') do
+        FileUtils.ln_s('../../LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.h', 'LCLUserDefaultsConfig.h')
+      end
+      Dir.chdir(config.project_pods_root + 'BuildHeaders/LibComponentLogging-UserDefaults/') do
+        FileUtils.ln_s('../../LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.h', 'LCLUserDefaultsConfig.h')
+      end
       return
     end
   
