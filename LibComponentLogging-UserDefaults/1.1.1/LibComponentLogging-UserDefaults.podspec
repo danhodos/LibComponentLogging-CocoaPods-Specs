@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
     config.lcl_config.configure_extension(
         :name     => 'UserDefaults',
         :header   => 'LCLUserDefaults.h',
-        :template => 'Headers/LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.template.h'
+        :template => 'LibComponentLogging-UserDefaults/LCLUserDefaultsConfig.template.h'
       )
   end
 

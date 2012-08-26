@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
     config.lcl_config.configure_logger(
         :name     => 'LogFile',
         :header   => 'LCLLogFile.h',
-        :template => 'Headers/LibComponentLogging-LogFile/LCLLogFileConfig.template.h',
+        :template => 'LibComponentLogging-LogFile/LCLLogFileConfig.template.h',
         :modify   => [ 'LibComponentLogging-LogFile/LCLLogFile.m' ]
       )
   end

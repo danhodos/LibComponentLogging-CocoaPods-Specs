@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
     config.lcl_config.configure_logger(
         :name     => 'SystemLog',
         :header   => 'LCLSystemLog.h',
-        :template => 'Headers/LibComponentLogging-SystemLog/LCLSystemLogConfig.template.h',
+        :template => 'LibComponentLogging-SystemLog/LCLSystemLogConfig.template.h',
         :modify   => [ 'LibComponentLogging-SystemLog/LCLSystemLog.m' ]
       )
   end
