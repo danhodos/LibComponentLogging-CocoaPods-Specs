@@ -22,8 +22,6 @@ Pod::Spec.new do |s|
   def s.post_install(target)
     if not (config.respond_to? :lcl_config and config.lcl_config) then
       # LibComponentLogging-pods configuration is not available
-      puts '[!] LibComponentLogging-SystemLog needs to be configured. '        \
-           'See http://0xc0.de/LibComponentLogging#CocoaPods for details.'
       return
     end
 
