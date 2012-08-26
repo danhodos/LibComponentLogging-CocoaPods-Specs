@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'LCLNSLog*.{h,m}'
 
-  s.dependency 'LibComponentLogging-Core', '>= 1.1.6'
+  s.dependency 'LibComponentLogging-Core', '>= 1.1.5'
 
   def s.post_install(target)
     if not (config.respond_to? :lcl_config and config.lcl_config) then
