@@ -159,39 +159,39 @@ class LibComponentLoggingPodsConfig
 
   protected
   def create_folder(path)
-    debug "Creating folder '" + path + "'"
+    debug "Creating folder '" + path.to_s + "'"
     FileUtils.mkdir_p(path) unless File.directory? path
   end
 
   protected
   def create_file(file)
-    debug "Creating file '" + file + "'"
+    debug "Creating file '" + file.to_s + "'"
     FileUtils.rm(file) if File.file? file
     FileUtils.touch(file)
   end
 
   protected
   def touch_file(file)
-    debug "Touching file '" + file + "'"
+    debug "Touching file '" + file.to_s + "'"
     FileUtils.touch(file)
   end
 
   protected
   def copy_file(src_file, dst_file)
-    debug "Copying file '" + src_file + "' to '" + dst_file + "'"
+    debug "Copying file '" + src_file.to_s + "' to '" + dst_file.to_s + "'"
     FileUtils.cp(src_file, dst_file)
   end
 
   protected
   def link_file(src_file, dst_file)
-    debug "Creating link '" + src_file + "' to '" + dst_file + "'"
+    debug "Creating link '" + src_file.to_s + "' to '" + dst_file.to_s + "'"
     FileUtils.rm(dst_file) if File.file? dst_file
     FileUtils.ln_s(src_file, dst_file)
   end
 
   protected
   def add_suffix_to_includes(file, suffix)
-    debug "Adding suffix '" + suffix + "' to includes in file '" + file + "'"
+    debug "Adding suffix '" + suffix.to_s + "' to includes in file '" + file.to_s + "'"
     text = File.read(file)
     text = text.gsub(/\"lcl_config_components.h\"/, '"lcl_config_components.h' + suffix + '"')
     text = text.gsub(/\"lcl_config_logger.h\"/, '"lcl_config_logger.h' + suffix + '"')
@@ -201,7 +201,7 @@ class LibComponentLoggingPodsConfig
 
   protected
   def add_include(file, include)
-    debug "Adding include '" + include + "' to file '" + file + "'"
+    debug "Adding include '" + include.to_s + "' to file '" + file.to_s + "'"
     file.open('a') do |f|
       f.puts("#include \"" + include + "\"\n")
     end
